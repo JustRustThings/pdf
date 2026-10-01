@@ -305,6 +305,8 @@ impl<F: FnMut()> Drop for Defer<F> {
     }
 }
 
+const MAX_RESOLVE_DEPTH: usize = 64;
+
 fn resolve_get<'a, B, OC, SC, L, T>(resolver: &impl Resolve, storage: &'a Storage<B, OC, SC, L>, chain: &Mutex<Vec<PlainRef>>, r: Ref<T>) -> Result<RcRef<T>>
 where
     B: Backend,
@@ -321,6 +323,9 @@ where
         let mut chain = chain.lock().unwrap();
         if chain.contains(&key) {
             bail!("Recursive reference");
+        }
+        if chain.len() >= MAX_RESOLVE_DEPTH {
+            bail!("Reference chain too deep");
         }
         chain.push(key);
     }
