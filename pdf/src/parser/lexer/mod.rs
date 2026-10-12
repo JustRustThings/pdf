@@ -357,7 +357,7 @@ impl<'a> Lexer<'a> {
 
     #[inline]
     fn is_delimiter(&self, pos: usize) -> bool {
-        self.buf.get(pos).map(|b| b"()<>[]{}/%".contains(b)).unwrap_or(false)
+        self.buf.get(pos).is_some_and(|b| matches!(b, b'(' | b')' | b'<' | b'>' | b'[' | b']' | b'{' | b'}' | b'/' | b'%'))
     }
 
 }
