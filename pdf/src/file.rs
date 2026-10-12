@@ -130,6 +130,14 @@ where
     pub fn into_inner(self) -> B {
         self.backend
     }
+    /// The cross-reference table read by `load_storage_and_trailer`.
+    pub fn xref_table(&self) -> &XRefTable {
+        &self.refs
+    }
+    /// Whether the file is encrypted: the strings and streams of its objects are decrypted on read.
+    pub fn is_encrypted(&self) -> bool {
+        self.decoder.is_some()
+    }
     pub fn version(&self) -> Result<String> {
         Ok(String::from_utf8(self.backend.read(self.start_offset+1..self.start_offset+8)?.to_owned())?)
     }
