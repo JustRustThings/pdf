@@ -127,12 +127,12 @@ pub fn serialize_name(s: &str, out: &mut impl io::Write) -> Result<()> {
 /// Primitive Dictionary type.
 #[derive(Default, Clone, PartialEq)]
 pub struct Dictionary {
-    dict: IndexMap<Name, Primitive>,
+    dict: IndexMap<Name, Primitive, foldhash::fast::RandomState>,
 }
 impl Dictionary {
     pub fn new() -> Dictionary {
         Dictionary {
-            dict: IndexMap::new(),
+            dict: IndexMap::default(),
         }
     }
     pub fn len(&self) -> usize {
@@ -213,8 +213,8 @@ impl DeepClone for Dictionary {
     }
 }
 impl Deref for Dictionary {
-    type Target = IndexMap<Name, Primitive>;
-    fn deref(&self) -> &IndexMap<Name, Primitive> {
+    type Target = IndexMap<Name, Primitive, foldhash::fast::RandomState>;
+    fn deref(&self) -> &IndexMap<Name, Primitive, foldhash::fast::RandomState> {
         &self.dict
     }
 }
