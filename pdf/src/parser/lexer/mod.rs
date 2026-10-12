@@ -306,7 +306,7 @@ impl<'a> Lexer<'a> {
     /// Substr if found.
     pub fn seek_substr_back(&mut self, substr: &[u8]) -> Result<Substr<'a>> {
         let end = self.pos;
-        match self.buf[.. end].windows(substr.len()).rposition(|w| w == substr) {
+        match memchr::memmem::rfind(&self.buf[.. end], substr) {
             Some(start) => {
                 self.pos = start + substr.len();
                 Ok(self.new_substr(self.pos .. end))
